@@ -1,0 +1,63 @@
+; Funktion RND() [mit 32-bit XOR-Shift]
+;-------------------------------------------------
+; Implementierung in C/C++:
+;-------------------------------------------------
+; v1 ^= v1 << 13
+; v1 ^= v1 >> 17
+; v1 ^= v1 << 5
+;-------------------------------------------------
+; Implementierung in Assembler 6502 im C64
+;-------------------------------------------------
+; Variablen:
+; v1 [v1e v1d v1c v1b v1a] ~ [8b 8c 8d 8e 8f]
+; v2 [v2e v2d v2c v2b v2a] ~ [61 62 63 64 65] ;-------------------------------------------------
+; Startadresse $e097 (Codelänge 64 Bytes) 
+;-------------------------------------------------
+; (1.): [v1 ^= v1 << 13]
+	ldx #$03	
+-	lda v1d,x	; v2 = v1 << 8
+	sta v2e,x
+	dex
+	bne -
+	stx v2a
+	jsr lsh; v2 = v2 << 5; v1 ^= v2
+;-------------------------------------------------
+; (2.): v1 ^= v1 >> 17
+	stx v2d
+	stx v2c
+	lda v1d	
+	lsr 	; 0 >> 1	v2 = v1 >> (1 + 16) [part 1]
+	sta v2b	; 0 >> 16
+	lda v1c
+	ror		; c >> 1	v2 = v1 >> (1 + 16) [part 2]
+	sta v2a	; c >> 16
+	jsr dxo
+;-----------------------------------------------------
+; (3.): v1 ^= v2 << 5
+;	ldx #$04		; Daten bereits kopiert in dxo !
+;-	lda v1e,x ; v2 = v1
+;	sta v2e,x
+;	dex
+;	bne -
+	jsr lsh
+;-----------------------------------------------
+	jmp $e0e3	; Rückgabe Nummer zum BASIC
+;-----------------------------------------------
+lsh	ldx #$05
+-	asl v2a	; v2 = v2 << 5
+	rol v2b
+	rol v2c
+	rol v2d
+	dex
+	bne -								; (13b)
+;-------------------------------------------------
+; xor v1 ^= v2	; eor für alle 4 Byte
+dxo	ldx #$04
+-	lda v1e,x	; lese v1
+	eor v2e,x	; v1 xor v2
+	sta v1e,x 	; schreibe v1
+	sta v2e,x 	; schreibe v2 
+	dex
+	bne -
+	rts	
+;-------------------------------------------------

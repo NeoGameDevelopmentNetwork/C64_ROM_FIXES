@@ -29,7 +29,6 @@ kernalrom	= $e000		; Startadresse
 prozport 	= $01		; Prozessorport
 
 memrom		= %00110111	; Basic+Kernal ROM
-membas		= %00110110	; Basic ram+Kernal ROM
 memram		= %00110101	; Basic+Kernal ROM
 
 
@@ -106,6 +105,12 @@ nohigh
 pend
 	lda #memram		; BASIC, KERNAL RAM aktivieren
 	sta prozport
+
+	ldx #$04		; copy init rnd default seed
+-	lda $e3ba,x
+	sta $8B,x
+	dex
+	bpl -
 	rts
 
 

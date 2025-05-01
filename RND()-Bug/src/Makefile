@@ -1,7 +1,7 @@
 
 
 # ROM-Patch-Version
-F=xorsh2x
+F=xorsh32bit
 
 
 all: $(F).o
