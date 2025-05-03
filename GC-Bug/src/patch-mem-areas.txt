@@ -1,0 +1,46 @@
+Garbage Collection Memory Path Areas:
+-------------------------------------
+part1:
+from  95 08
+len   45 01
+to    B4F4 / B638
+
+part2:
+from  25 0A
+len   19 00
+to    E4BA / E4D2
+
+part3:
+from  EF 09
+len   36 00
+to    E474 / E4AA
+
+part4:
+from  DA 09
+len   15 0
+to    B6C1 / B6D5
+-------------------------------------
+
+
+Additional available memory Areas,
+together with cbm arithmetic and
+RND() patch are the following:
+-------------------------------------
+
+BASIC-ROM unused:
+-----------------
+from	BF52
+to		BF5D
+len		12 Bytes
+
+KERNAL-ROM (free from RND())
+----------------------------
+part 1:
+from	E0D7
+to		E0E2
+len		12 Bytes
+
+part 2:
+from	E08D
+to		E096
+len		10 Bytes
